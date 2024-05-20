@@ -2,10 +2,14 @@ const axios = require('axios');
 
 async function getToken() {
     try {
-        const response = await axios.post('https://accounts.spotify.com/api/token', {
+        const response = await axios.post('https://accounts.spotify.com/api/token', new URLSearchParams({
             grant_type: 'client_credentials',
             client_id: process.env.SPOTIFY_CLIENT_ID,
             client_secret: process.env.SPOTIFY_CLIENT_SECRET
+        }).toString(), {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
         });
 
         return response.data.access_token;
@@ -14,8 +18,9 @@ async function getToken() {
     }
 }
 
-const _getGenres = async (token) => {
+const _getGenres = async () => {
     try {
+        const token = await getToken(); // Get the token dynamically
         const response = await axios.get('https://api.spotify.com/v1/browse/categories?locale=sv_US', {
             headers: { 'Authorization': 'Bearer ' + token }
         });
