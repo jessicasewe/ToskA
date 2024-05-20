@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --exit"
+    "test": "mocha --exit",
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +22,7 @@
     "mongod": "^2.0.0",
     "mongoose": "^8.4.0",
     "node-cron": "^3.0.3",
+    "nodemon": "^3.1.0",
     "sinon": "^18.0.0",
     "sinon-chai": "^3.7.0",
     "supertest": "^7.0.0"

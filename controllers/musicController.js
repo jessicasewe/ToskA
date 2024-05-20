@@ -2,7 +2,7 @@ const axios = require('axios');
 const cron = require('node-cron');
 require('dotenv').config();
 
-let currentToken = null;
+let currentToken = process.env.SPOTIFY_TOKEN;
 
 async function getToken() {
     try {
@@ -26,10 +26,6 @@ async function getToken() {
 }
 
 const _getGenres = async () => {
-    if (!currentToken) {
-        await getToken();
-    }
-
     try {
         const response = await axios.get('https://api.spotify.com/v1/browse/categories?locale=sv_GH', {
             headers: { 'Authorization': 'Bearer ' + currentToken }
@@ -42,16 +38,19 @@ const _getGenres = async () => {
 
 const _getPlaylistByGenre = async (genreId) => {
     try {
-        const token = await getValidToken();
         const limit = 10;
         const response = await axios.get(`https://api.spotify.com/v1/browse/categories/${genreId}/playlists?limit=${limit}`, {
-            headers: { 'Authorization': 'Bearer ' + token }
+            headers: { 'Authorization': 'Bearer ' + currentToken }
         });
         return response.data.playlists.items;
     } catch (error) {
+        console.log(error)
         throw new Error('Failed to get playlists by genre: ' + error.message);
     }
 }
+
+
+
 // Schedule a job to refresh the token every 55 minutes
 cron.schedule('*/55 * * * *', async () => {
     await getToken();
@@ -61,5 +60,6 @@ cron.schedule('*/55 * * * *', async () => {
 module.exports = {
     getToken,
     _getGenres,
-    _getPlaylistByGenre
+    _getPlaylistByGenre,
+    
 };
