@@ -1,3 +1,3 @@
-exports.getMusic = (req, res) => {
-    res.send('Get music');
-};
+// exports.getMusic = (req, res) => {
+//     res.send('Get music');
+// };

@@ -1,8 +1,7 @@
-const express = require('express');
-const { route } = require('./authRoutes');
-const { getMovies } = require('../controllers/musicController');
-const router = express.Router();
+// const express = require('express');
+// const router = express.Router();
+// const movieController = require('../controllers/movieController');
 
-router.get('/', getMovies);
+// router.get('/', movieController.getMovieData);
 
-module.exports = router;
+// module.exports = router;
