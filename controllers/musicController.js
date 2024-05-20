@@ -1,23 +1,16 @@
 const axios = require('axios');
 
-const getToken = async () => {
+async function getToken() {
     try {
-        const clientId = process.env.CLIENT_ID;
-        const clientSecret = process.env.CLIENT_SECRET;
-
-        const authString = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
-
-        const response = await axios.post('https://accounts.spotify.com/api/token', 'grant_type=client_credentials', 
-        {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': `Basic ${authString}`
-            },
+        const response = await axios.post('https://accounts.spotify.com/api/token', {
+            grant_type: 'client_credentials',
+            client_id: process.env.SPOTIFY_CLIENT_ID,
+            client_secret: process.env.SPOTIFY_CLIENT_SECRET
         });
+
         return response.data.access_token;
     } catch (error) {
-        console.error('Error getting token:', error);
-        throw new Error('Error getting token');
+        throw new Error('Failed to obtain access token');
     }
 }
 
