@@ -49,6 +49,17 @@ const _getPlaylistByGenre = async (genreId) => {
     }
 }
 
+const _getTracksByPlaylist = async (playlistId) => {
+    try {
+        const response = await axios.get(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+            headers: { 'Authorization': 'Bearer ' + currentToken }
+        });
+        return response.data.items;
+    } catch (error) {
+        console.log(error)
+        throw new Error('Failed to get tracks by playlist: ' + error.message);
+    }
+}
 
 
 // Schedule a job to refresh the token every 55 minutes
@@ -61,5 +72,6 @@ module.exports = {
     getToken,
     _getGenres,
     _getPlaylistByGenre,
+    _getTracksByPlaylist
     
 };
