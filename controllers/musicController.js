@@ -14,4 +14,18 @@ async function getToken() {
     }
 }
 
-module.exports = getToken;
+const _getGenres = async (token) => {
+    try {
+        const response = await axios.get('https://api.spotify.com/v1/browse/categories?locale=sv_US', {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        return response.data.categories.items;
+    } catch (error) {
+        throw new Error('Failed to get genres: ' + error.message);
+    }
+}
+
+module.exports = {
+    getToken,
+    _getGenres
+};
