@@ -1,8 +1,16 @@
 const axios = require('axios');
 const cron = require('node-cron');
+const redis = require('redis');
 require('dotenv').config();
 
-let currentToken = process.env.SPOTIFY_TOKEN;
+// let currentToken = process.env.SPOTIFY_TOKEN;
+
+//redis client
+const redisClient = redis.createClient(process.env.REDIS_URL);
+
+redisClient.on('error', (err) => console.error('Redis client error', err));
+// Connect to Redis
+redisClient.connect().catch(console.error);
 
 
 // Get access token
@@ -18,20 +26,32 @@ async function getToken() {
             }
         });
 
-        currentToken = response.data.access_token;
-        console.log('New token generated:', currentToken);
-        return currentToken;
+        const token = response.data.access_token;
+        console.log('New token generated:', token);
+        await redisClient.set('spotify_token', token, { EX: 3300 });
+        return token;
     } catch (error) {
         console.error('Failed to obtain access token:', error.message);
         throw new Error('Failed to obtain access token');
     }
 }
 
+// Get token from redis
+async function getValidToken() {
+    let token = await redisClient.get('spotify_token');
+    if (!token) {
+        token = await getToken();
+    }
+    return token;
+}
+
+
 // Get genres
 const _getGenres = async () => {
     try {
+        const token = await getValidToken();
         const response = await axios.get('https://api.spotify.com/v1/browse/categories?locale=sv_GH', {
-            headers: { 'Authorization': 'Bearer ' + currentToken }
+            headers: { 'Authorization': 'Bearer ' + token }
         });
         return response.data.categories.items;
     } catch (error) {
@@ -43,9 +63,10 @@ const _getGenres = async () => {
 // Get playlist by genre
 const _getPlaylistByGenre = async (genreId) => {
     try {
+        const token = await getValidToken();
         const limit = 10;
         const response = await axios.get(`https://api.spotify.com/v1/browse/categories/${genreId}/playlists?limit=${limit}`, {
-            headers: { 'Authorization': 'Bearer ' + currentToken }
+            headers: { 'Authorization': 'Bearer ' + token }
         });
         return response.data.playlists.items;
     } catch (error) {
@@ -57,9 +78,10 @@ const _getPlaylistByGenre = async (genreId) => {
 
 // Get tracks by playlist
 const _getTracksByPlaylist = async (playlistId) => {
-    try {
+    try { 
+        const token = await getValidToken();
         const response = await axios.get(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
-            headers: { 'Authorization': 'Bearer ' + currentToken }
+            headers: { 'Authorization': 'Bearer ' + token }
         });
         return response.data.items;
     } catch (error) {
@@ -72,8 +94,9 @@ const _getTracksByPlaylist = async (playlistId) => {
 // Get track by id
 const _getTrackById = async (trackId) => {
     try {
+        const token = await getValidToken();
         const response = await axios.get('https://api.spotify.com/v1/tracks/' + trackId, {
-            headers: { 'Authorization': 'Bearer ' + currentToken }
+            headers: { 'Authorization': 'Bearer ' + token }
         });
         return response.data;
     } catch (error) {
@@ -94,6 +117,5 @@ module.exports = {
     _getGenres,
     _getPlaylistByGenre,
     _getTracksByPlaylist,
-    _getTrackById
-    
+    _getTrackById,
 };
