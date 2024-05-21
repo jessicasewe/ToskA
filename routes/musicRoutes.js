@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { _getGenres, _getPlaylistByGenre, _getTracksByPlaylist } = require('../controllers/musicController');
+const { _getGenres, _getPlaylistByGenre, _getTracksByPlaylist, _getTrackById } = require('../controllers/musicController');
 
 router.get('/genres', async (req, res) => {
     try {
@@ -33,6 +33,15 @@ router.get('/tracks/:playlistId', async (req, res) => {
     }
 });
 
-router.get('')
+router.get('/track/:trackId', async (req, res) => {
+    const trackId = req.params.trackId;
+    try {
+        const track = await _getTrackById(trackId);
+        res.json(track);
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: error.message });
+    }
+});
 
 module.exports = router;
