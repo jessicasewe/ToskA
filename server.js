@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 // Routes
 app.use('/auth', authRoutes);
 app.use('/api/music', musicRoutes);
-app.use('/api/movies', movieRoutes);
+app.use('/api', movieRoutes);
 
 // Database Connection
 connectDB();
