@@ -36,7 +36,41 @@ const _getMoviesByGenre = async (genreId) => {
     }
 };
 
+const _getTVGenres = async () => {
+    try {
+        const response = await axios.get('https://api.themoviedb.org/3/genre/tv/list', {
+            params: {
+                language: 'en',
+                api_key: process.env.TMDB_API_KEY
+            }
+        });
+        return response.data.genres;
+    } catch (error) {
+        console.error('Failed to fetch TV genres:', error.response ? error.response.data : error.message);
+        throw new Error('Failed to fetch TV genres');
+    }
+};
+
+const _getTVShowsByGenre = async (genreId) => {
+    try {
+        const response = await axios.get('https://api.themoviedb.org/3/discover/tv', {
+            params: {
+                with_genres: genreId,
+                language: 'en',
+                api_key: process.env.TMDB_API_KEY
+            }
+        });
+        return response.data.results;
+    } catch (error) {
+        console.error('Failed to fetch TV shows by genre:', error.response ? error.response.data : error.message);
+        throw new Error('Failed to fetch TV shows by genre');
+    }
+}
+
+
 module.exports = {
     _getMoviesGenres,
-    _getMoviesByGenre
+    _getMoviesByGenre,
+    _getTVGenres,
+    _getTVShowsByGenre
 };
