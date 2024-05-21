@@ -21,6 +21,22 @@ const _getMoviesGenres = async () => {
     }
 };
 
+const _getMoviesByGenre = async (genreId) => {
+    try {
+        const response = await tmdb.get('/discover/movie', {
+            params: {
+                with_genres: genreId,
+                langauge: 'en-US'
+            }
+        });
+        return response.data.results;
+    } catch (error){
+        console.error('Failed to fetch movies by genre:', error.response ? error.response.data : error.message);
+        throw new Error('Failed to fetch movies by genre');
+    }
+};
+
 module.exports = {
-    _getMoviesGenres
+    _getMoviesGenres,
+    _getMoviesByGenre
 };
