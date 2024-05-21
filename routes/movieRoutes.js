@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { _getMoviesGenres, _getMoviesByGenre, _getTVGenres, _getTVShowsByGenre } = require('../controllers/movieController');
+const { _getMoviesGenres, _getMoviesByGenre, _getTVGenres, _getTVShowsByGenre, _getMovieById, _getTVShowById } = require('../controllers/movieController');
 
 router.get('/movies/genres', async (req, res) => {
     try {
@@ -16,6 +16,16 @@ router.get('/movies/genres/:genreId', async (req, res) => {
     try {
         const movies = await _getMoviesByGenre(genreId);
         res.json(movies);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.get('/movies/:movieId', async (req, res) => {
+    const movieId = req.params.movieId;
+    try {
+        const movie = await _getMovieById(movieId);
+        res.json(movie);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -39,5 +49,16 @@ router.get('/tv/genres/:genreId', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+router.get('/tv/:tvId', async (req, res) => {
+    const tvId = req.params.tvId;
+    try {
+        const tvShow = await _getTVShowById(tvId);
+        res.json(tvShow);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 
 module.exports = router;
