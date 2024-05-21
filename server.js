@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/authRoutes');
 const musicRoutes = require('./routes/musicRoutes');
+const movieRoutes = require('./routes/movieRoutes');
 const connectDB = require('./config/db');
 require('dotenv').config();
 
@@ -14,6 +15,7 @@ app.use(bodyParser.json());
 // Routes
 app.use('/auth', authRoutes);
 app.use('/api/music', musicRoutes);
+app.use('/api/movies', movieRoutes);
 
 // Database Connection
 connectDB();
