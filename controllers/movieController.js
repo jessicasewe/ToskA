@@ -11,6 +11,8 @@ const tmdb = axios.create({
     }
 });
 
+
+// Get movie genres
 const _getMoviesGenres = async () => {
     try {
         const response = await tmdb.get('/genre/movie/list?language=en');
@@ -21,6 +23,8 @@ const _getMoviesGenres = async () => {
     }
 };
 
+
+// Get movies by genre
 const _getMoviesByGenre = async (genreId) => {
     try {
         const response = await tmdb.get('/discover/movie', {
@@ -37,6 +41,7 @@ const _getMoviesByGenre = async (genreId) => {
 };
 
 
+// Get movie by id
 const _getMovieById = async (movieId) => {
     try {
         const response = await tmdb.get(`/movie/${movieId}`);
@@ -47,6 +52,8 @@ const _getMovieById = async (movieId) => {
     }
 };
 
+
+// Get TV genres
 const _getTVGenres = async () => {
     try {
         const response = await axios.get('https://api.themoviedb.org/3/genre/tv/list', {
@@ -62,6 +69,8 @@ const _getTVGenres = async () => {
     }
 };
 
+
+// Get TV shows by genre
 const _getTVShowsByGenre = async (genreId) => {
     try {
         const response = await axios.get('https://api.themoviedb.org/3/discover/tv', {
@@ -78,6 +87,8 @@ const _getTVShowsByGenre = async (genreId) => {
     }
 }
 
+
+// Get TV show by id
 const _getTVShowById = async (tvShowId) => {
     try {
         const response = await axios.get(`https://api.themoviedb.org/3/tv/${tvShowId}`, {

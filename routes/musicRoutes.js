@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { _getGenres, _getPlaylistByGenre, _getTracksByPlaylist, _getTrackById } = require('../controllers/musicController');
 
+
+//route for genres
 router.get('/genres', async (req, res) => {
     try {
         const genres = await _getGenres();
@@ -11,6 +13,8 @@ router.get('/genres', async (req, res) => {
     }
 });
 
+
+//route for playlist by genre
 router.get('/playlist/:genreId', async (req, res) => {
     const genreId = req.params.genreId;
     try {
@@ -22,6 +26,8 @@ router.get('/playlist/:genreId', async (req, res) => {
     }
 });
 
+
+//route for tracks by playlist
 router.get('/tracks/:playlistId', async (req, res) => {
     const playlistId = req.params.playlistId;
     try {
@@ -33,6 +39,7 @@ router.get('/tracks/:playlistId', async (req, res) => {
     }
 });
 
+//route for track by id
 router.get('/track/:trackId', async (req, res) => {
     const trackId = req.params.trackId;
     try {

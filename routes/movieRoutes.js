@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { _getMoviesGenres, _getMoviesByGenre, _getTVGenres, _getTVShowsByGenre, _getMovieById, _getTVShowById } = require('../controllers/movieController');
 
+//route for movie genres
 router.get('/movies/genres', async (req, res) => {
     try {
         const genres = await _getMoviesGenres();
@@ -11,6 +12,8 @@ router.get('/movies/genres', async (req, res) => {
     }
 });
 
+
+//route for movie by genre
 router.get('/movies/genres/:genreId', async (req, res) => {
     const genreId = req.params.genreId;
     try {
@@ -21,6 +24,8 @@ router.get('/movies/genres/:genreId', async (req, res) => {
     }
 });
 
+
+//route for movie by id
 router.get('/movies/:movieId', async (req, res) => {
     const movieId = req.params.movieId;
     try {
@@ -31,6 +36,8 @@ router.get('/movies/:movieId', async (req, res) => {
     }
 });
 
+
+//route for tvshow genres
 router.get('/tv/genres', async (req, res) => {
     try {
         const genres = await _getTVGenres();
@@ -40,6 +47,7 @@ router.get('/tv/genres', async (req, res) => {
     }
 });
 
+//route for tvshow by genre
 router.get('/tv/genres/:genreId', async (req, res) => {
     const genreId = req.params.genreId;
     try {
@@ -50,6 +58,8 @@ router.get('/tv/genres/:genreId', async (req, res) => {
     }
 });
 
+
+//route for tvshow by id
 router.get('/tv/:tvId', async (req, res) => {
     const tvId = req.params.tvId;
     try {

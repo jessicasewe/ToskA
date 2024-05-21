@@ -4,6 +4,8 @@ require('dotenv').config();
 
 let currentToken = process.env.SPOTIFY_TOKEN;
 
+
+// Get access token
 async function getToken() {
     try {
         const response = await axios.post('https://accounts.spotify.com/api/token', new URLSearchParams({
@@ -25,6 +27,7 @@ async function getToken() {
     }
 }
 
+// Get genres
 const _getGenres = async () => {
     try {
         const response = await axios.get('https://api.spotify.com/v1/browse/categories?locale=sv_GH', {
@@ -36,6 +39,8 @@ const _getGenres = async () => {
     }
 }
 
+
+// Get playlist by genre
 const _getPlaylistByGenre = async (genreId) => {
     try {
         const limit = 10;
@@ -49,6 +54,8 @@ const _getPlaylistByGenre = async (genreId) => {
     }
 }
 
+
+// Get tracks by playlist
 const _getTracksByPlaylist = async (playlistId) => {
     try {
         const response = await axios.get(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
@@ -61,6 +68,8 @@ const _getTracksByPlaylist = async (playlistId) => {
     }
 }
 
+
+// Get track by id
 const _getTrackById = async (trackId) => {
     try {
         const response = await axios.get('https://api.spotify.com/v1/tracks/' + trackId, {
