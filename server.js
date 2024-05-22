@@ -4,6 +4,7 @@ const authRoutes = require('./routes/authRoutes');
 const musicRoutes = require('./routes/musicRoutes');
 const movieRoutes = require('./routes/movieRoutes');
 const connectDB = require('./config/db');
+const User = require('./models/user');
 require('dotenv').config();
 
 const app = express();
@@ -27,8 +28,34 @@ app.get('/', (req, res) => {
 
 // Render the register page
 app.get('/register', (req, res) => {
-  res.render('register');
+  const successMessage = req.query.success ? 'Registration successful!' : '';
+  res.render('register', { successMessage });
 });
+
+app.post('/register', async (req, res) => {
+  try {
+    // Extract user data from the request body
+    const { name, email, password } = req.body;
+
+    // Create a new user instance
+    const newUser = new User({
+      name,
+      email,
+      password,
+    });
+
+    // Save the user to the database
+    await newUser.save();
+
+    // Redirect to the registration page with a success message
+    res.redirect('/register?success=true');
+  } catch (error) {
+    // Handle any errors that occur during user registration
+    console.error('Error registering user:', error);
+    res.status(500).send('Error registering user. Please try again later.');
+  }
+});
+
 
 //serve static files
 app.use(express.static('public'));
