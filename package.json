@@ -5,17 +5,20 @@
   "scripts": {
     "test": "mocha --exit",
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "build:css": "tailwindcss build public/css/tailwind.css -o public/css/styles.css"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "autoprefixer": "^10.4.19",
     "axios": "^1.7.0",
     "bcryptjs": "^2.4.3",
     "chai": "^4.4.1",
     "chai-http": "^4.4.0",
     "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mocha": "^10.4.0",
@@ -23,6 +26,7 @@
     "mongoose": "^8.4.0",
     "node-cron": "^3.0.3",
     "nodemon": "^3.1.0",
+    "postcss": "^8.4.38",
     "redis": "^4.6.14",
     "sinon": "^18.0.0",
     "sinon-chai": "^3.7.0",
@@ -31,7 +35,9 @@
   "directories": {
     "test": "test"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "tailwindcss": "^3.4.3"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jessicasewe/ToskA.git"
