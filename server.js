@@ -100,6 +100,12 @@ app.get('/music', (req, res) => {
   res.render('music', { user: req.session.user });
 });
 
+//render playlist page
+app.get('/playlists', (req, res) => {
+  const genreId = req.query.genreId;
+  res.render('playlists', { genreId });
+});
+
 //serve static files
 app.use(express.static('public'));
 

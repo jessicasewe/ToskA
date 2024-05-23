@@ -83,15 +83,17 @@
                 }
                 const genres = await response.json();
                 const genresContainer = document.getElementById('genres');
-
+    
                 genres.forEach(genre => {
                     const genreDiv = document.createElement('div');
                     genreDiv.className = 'genre-card bg-white p-4 rounded shadow-md text-center';
                     genreDiv.innerHTML = `
-                        <img src="${genre.icons[0].url}" alt="${genre.name}" class="w-full h-48 object-cover rounded">
-                        <div class="overlay">
-                            <h3 class="text-xl font-semibold mb-2">${genre.name}</h3>
-                        </div>
+                        <a href="/playlists?genreId=${genre.id}">
+                            <img src="${genre.icons[0].url}" alt="${genre.name}" class="w-full h-48 object-cover rounded">
+                            <div class="overlay">
+                                <h3 class="text-xl font-semibold mb-2">${genre.name}</h3>
+                            </div>
+                        </a>
                     `;
                     genresContainer.appendChild(genreDiv);
                 });

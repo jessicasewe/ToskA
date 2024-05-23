@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playlists</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <!-- Navbar -->
+    <nav class="bg-gray-800 py-4 sticky">
+        <div class="container mx-auto px-4 flex items-center justify-between">
+            <span class="text-white font-semibold text-xl">Toska</span>
+            <div class="flex items-center">
+                <a href="/movies" class="text-gray-300 hover:text-white px-3 py-2">Movies</a>
+                <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Playlists Section -->
+    <div class="container mx-auto px-4 py-8">
+        <h2 class="text-2xl font-bold mb-4">Playlists</h2>
+        <div id="playlists" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <!-- Playlists will be inserted here dynamically -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const genreId = '<%= genreId %>';
+            try {
+                const response = await fetch(`/api/music/playlist/${genreId}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const playlists = await response.json();
+                const playlistsContainer = document.getElementById('playlists');
+
+                playlists.forEach(playlist => {
+                    const playlistDiv = document.createElement('div');
+                    playlistDiv.className = 'playlist-card bg-white p-4 rounded shadow-md text-center';
+                    playlistDiv.innerHTML = `
+                        <a href="${playlist.external_urls.spotify}" target="_blank">
+                            <img src="${playlist.images[0].url}" alt="${playlist.name}" class="w-full h-48 object-cover rounded">
+                            <h3 class="text-xl font-semibold mb-2">${playlist.name}</h3>
+                            <p class="text-gray-600">${playlist.description}</p>
+                        </a>
+                    `;
+                    playlistsContainer.appendChild(playlistDiv);
+                });
+            } catch (error) {
+                console.error('Error fetching playlists:', error);
+            }
+        });
+    </script>
+</body>
+</html>
