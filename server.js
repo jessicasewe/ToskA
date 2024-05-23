@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/authRoutes');
 const musicRoutes = require('./routes/musicRoutes');
@@ -15,6 +16,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set('view engine', 'ejs');
+
+
+//session middleware
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'secret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set to true in production with HTTPS
+}));
+
 
 // Routes
 app.use('/auth', authRoutes);
@@ -61,15 +72,25 @@ app.get('/login', (req, res) => {
 app.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email, password });
-    if (!user) {
-      return res.status(401).send('Invalid credentials');
+    const user = await User.findOne({ email });
+    if (!user || user.password !== password) {
+      return res.status(400).send('Invalid credentials');
     }
-    res.redirect('/dashboard'); // assuming you have a dashboard page
+    req.session.user = user; // Save user to session
+    res.redirect('/category');
   } catch (error) {
     console.error('Error logging in:', error);
     res.status(500).send('Error logging in. Please try again later.');
   }
+});
+
+
+// Render the choose category page
+app.get('/category', (req, res) => {
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+  res.render('category', { user: req.session.user });
 });
 
 //serve static files

@@ -13,25 +13,37 @@
             transform: translateY(-10px);
             box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
         }
+        .card img {
+            height: 150px; /* Set a fixed height for the images */
+            object-fit: cover; /* Ensure the image covers the area without distorting */
+        }
+        body {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.photowall.com/products/83228/colorful-neon-lights.jpg?h=699&q=85');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed; /* Prevents background from scrolling */
+        }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold">Welcome, <%= user.name %></h1>
-        <p class="text-gray-600">Please choose a category to continue</p>
-    </div>
-    <div class="flex space-x-6">
-        <div class="card bg-white p-6 rounded shadow-md w-64 text-center">
-            <img src="/images/music.jpg" alt="Music" class="w-full h-32 object-cover rounded mb-4">
-            <h2 class="text-xl font-semibold mb-2">Music</h2>
-            <p class="text-gray-600 mb-4">Explore your favorite music tracks</p>
-            <a href="/music" class="bg-blue-500 text-white py-2 px-4 rounded">Go to Music</a>
-        </div>
-        <div class="card bg-white p-6 rounded shadow-md w-64 text-center">
-            <img src="/images/movies.jpg" alt="Movies" class="w-full h-32 object-cover rounded mb-4">
-            <h2 class="text-xl font-semibold mb-2">Movies</h2>
-            <p class="text-gray-600 mb-4">Browse the latest movies</p>
-            <a href="/movies" class="bg-blue-500 text-white py-2 px-4 rounded">Go to Movies</a>
+<body class="flex items-center justify-center min-h-screen">
+    <div class="text-center mb-8 w-full max-w-lg relative z-10"> 
+        <h1 class="text-3xl font-bold mb-4 text-white">Welcome, <%= user.name %></h1>
+        <p class="mb-6 text-white">Please choose a category to continue</p>
+        <br>
+        <div class="flex justify-center mt-6 space-x-6">
+            <div class="card bg-gray-200 p-6 rounded shadow-md w-64 text-center">
+                <img src="/images/musiccc.png" alt="Music" class="w-full rounded mb-4">
+                <h2 class="text-xl font-semibold mb-2 text-white">Music</h2>
+                <p class="text-white mb-4">Explore your favorite music</p>
+                <a href="/music" class="bg-blue-500 text-white py-2 px-4 rounded">Go to Music</a>
+            </div>
+            <div class="card bg-gray-200 p-6 rounded shadow-md w-64 text-center">
+                <img src="/images/movies.avif" alt="Movies" class="w-full rounded mb-4">
+                <h2 class="text-xl font-semibold mb-2 text-white">Movies</h2>
+                <p class="text-white mb-4">Browse the latest movies</p>
+                <a href="/movies" class="bg-blue-500 text-white py-2 px-4 rounded">Go to Movies</a>
+            </div>
         </div>
     </div>
 </body>
