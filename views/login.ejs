@@ -3,30 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Login</title>
     <link href="/css/styles.css" rel="stylesheet">
-    <style>
-        .logo {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 50px; /* Adjust the size as needed */
-        }
-    </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <img class="logo" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
-
     <div class="bg-white p-6 rounded shadow-md w-full max-w-sm">
         <% if (successMessage) { %>
             <div class="bg-green-500 text-white p-2 rounded mb-4"><%= successMessage %></div>
         <% } %>
-        <h2 class="text-2xl mb-4">Sign Up</h2>
-        <form action="/register" method="POST">
-            <div class="mb-4">
-                <label class="block text-gray-700">Name</label>
-                <input type="text" name="name" class="mt-1 block w-full px-4 py-2 border rounded-md shadow-sm" required>
-            </div>
+        <h2 class="text-2xl mb-4">Login</h2>
+        <form action="/login" method="POST">
             <div class="mb-4">
                 <label class="block text-gray-700">Email</label>
                 <input type="email" name="email" class="mt-1 block w-full px-4 py-2 border rounded-md shadow-sm" required>
@@ -35,12 +21,12 @@
                 <label class="block text-gray-700">Password</label>
                 <input type="password" name="password" class="mt-1 block w-full px-4 py-2 border rounded-md shadow-sm" required>
             </div>
-            <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-md">Sign Up</button>
+            <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-md">Login</button>
         </form>
         <p class="mt-10 text-center text-sm text-gray-500">
-            Already a member?
-            <a href="/login" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Log in</a>
+            New Here????
+            <a href="/register" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Register</a>
         </p>
     </div>
-</body>
+</
 </html>

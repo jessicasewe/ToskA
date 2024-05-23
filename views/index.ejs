@@ -5,12 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <link href="/css/styles.css" rel="stylesheet">
+    <style>
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px; /* Adjust spacing as needed */
+        }
+        .logo {
+            width: 50px; /* Adjust the size as needed */
+            margin-right: 10px; /* Space between logo and text */
+        }
+        .title {
+            font-size: 9xl;
+            font-weight: bold;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px; /* Space between buttons */
+            margin-top: 20px;
+        }
+        .button {
+            flex: 1;
+            padding: 10px;
+            background-color: #3b82f6; /* Tailwind blue-500 */
+            color: white;
+            border-radius: 4px;
+            text-align: center;
+            text-decoration: none;
+        }
+        .button:hover {
+            background-color: #2563eb; /* Tailwind blue-600 */
+        }
+    </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="bg-white p-6 rounded shadow-md w-full max-w-sm text-center">
-        <h1 class="text-3xl mb-4">Welcome to the ToskA</h1>
-        <a href="/register" class="block mb-2 text-blue-500">Register</a>
-        <a href="/login" class="block text-blue-500">Login</a>
+        <div class="header">
+            <img class="logo" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
+            <h1 class="title">ToskA</h1>
+        </div>
+        <div class="buttons">
+            <a href="/register" class="button">Register</a>
+            <a href="/login" class="button">Login</a>
+        </div>
     </div>
 </body>
 </html>

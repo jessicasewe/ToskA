@@ -34,32 +34,46 @@ app.get('/register', (req, res) => {
 
 app.post('/register', async (req, res) => {
   try {
-    // Extract user data from the request body
     const { name, email, password } = req.body;
-
-    // Create a new user instance
     const newUser = new User({
       name,
       email,
       password,
     });
 
-    // Save the user to the database
     await newUser.save();
-
-    // Redirect to the registration page with a success message
     res.redirect('/register?success=true');
   } catch (error) {
-    // Handle any errors that occur during user registration
     console.error('Error registering user:', error);
     res.status(500).send('Error registering user. Please try again later.');
   }
 });
 
 
+// Render the login page
+app.get('/login', (req, res) => {
+  const successMessage = req.query.success ? 'Login successful!' : '';
+  res.render('login', { successMessage });
+});
+
+
+// Handle login
+app.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email, password });
+    if (!user) {
+      return res.status(401).send('Invalid credentials');
+    }
+    res.redirect('/dashboard'); // assuming you have a dashboard page
+  } catch (error) {
+    console.error('Error logging in:', error);
+    res.status(500).send('Error logging in. Please try again later.');
+  }
+});
+
 //serve static files
 app.use(express.static('public'));
-
 
 // Database Connection
 connectDB();
