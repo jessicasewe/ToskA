@@ -93,6 +93,13 @@ app.get('/category', (req, res) => {
   res.render('category', { user: req.session.user });
 });
 
+app.get('/music', (req, res) => {
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+  res.render('music', { user: req.session.user });
+});
+
 //serve static files
 app.use(express.static('public'));
 

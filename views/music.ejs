@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .sticky {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .genre-card {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .genre-card img {
+            transition: transform 0.3s ease;
+        }
+        .genre-card:hover img {
+            transform: scale(1.1);
+        }
+        .genre-card .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .genre-card:hover .overlay {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Navbar -->
+    <nav class="bg-gray-800 py-4 sticky">
+        <div class="container mx-auto px-4 flex items-center justify-between">
+            <span class="text-white font-semibold text-xl">Toska</span>
+            <div class="flex items-center">
+                <a href="/movies" class="text-gray-300 hover:text-white px-3 py-2">Movies</a>
+                <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Static Image with Text -->
+    <div class="relative isolate overflow-hidden bg-gray-900 h-screen">
+        <img src="https://images.pexels.com/photos/1677710/pexels-photo-1677710.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" class="absolute inset-0 h-full w-full object-cover">
+        <div class="absolute inset-0 bg-black opacity-50"></div>
+        <div class="relative z-10 flex items-center justify-center h-full">
+            <div class="text-center text-white px-4">
+                <h1 class="text-4xl sm:text-6xl font-bold mb-4">Explore Our Music Collection</h1>
+                <p class="text-lg sm:text-2xl">Discover new tracks, albums, and artists</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Genres Section -->
+    <div class="container mx-auto px-4 py-8">
+        <h2 class="text-2xl font-bold mb-4">Music Genres</h2>
+        <div id="genres" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <!-- Genres will be inserted here dynamically -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('/api/music/genres');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const genres = await response.json();
+                const genresContainer = document.getElementById('genres');
+
+                genres.forEach(genre => {
+                    const genreDiv = document.createElement('div');
+                    genreDiv.className = 'genre-card bg-white p-4 rounded shadow-md text-center';
+                    genreDiv.innerHTML = `
+                        <img src="${genre.icons[0].url}" alt="${genre.name}" class="w-full h-48 object-cover rounded">
+                        <div class="overlay">
+                            <h3 class="text-xl font-semibold mb-2">${genre.name}</h3>
+                        </div>
+                    `;
+                    genresContainer.appendChild(genreDiv);
+                });
+            } catch (error) {
+                console.error('Error fetching genres:', error);
+            }
+        });
+    </script>
+</body>
+</html>
