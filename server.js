@@ -97,26 +97,26 @@ app.get('/music', (req, res) => {
   if (!req.session.user) {
     return res.redirect('/login');
   }
-  res.render('music', { user: req.session.user });
+  res.render('music', { user: req.session.user, currentPage: 'music' });
 });
 
 app.get('/movies', (req, res) => {
   if (!req.session.user) {
     return res.redirect('/login');
   }
-  res.render('movies', { user: req.session.user });
+  res.render('movies', { user: req.session.user, currentPage: 'movies' });
 });
 
 //render playlist page
 app.get('/playlists', (req, res) => {
   const genreId = req.query.genreId;
-  res.render('playlists', { genreId });
+  res.render('playlists', { genreId, currentPage: 'music' });
 });
 
 //render tracks page
 app.get('/tracks', (req, res) => {
   const playlistId = req.query.playlistId;
-  res.render('tracks', { playlistId });
+  res.render('tracks', { playlistId, currentPage: 'music' });
 });
 
 //serve static files

@@ -1,9 +1,16 @@
 <nav class="bg-gray-800 p-4">
     <div class="container mx-auto flex justify-between items-center">
-        <a href="/music" class="text-white text-2xl font-bold hover:text-gray-400">Toska.</a>
+        <a href="/" class="text-white text-2xl font-bold hover:text-gray-400">Toska.</a>
         <div>
-            <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:text-gray-400">Movies</a>
-            <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:text-gray-400">Log Out</a>
+            <% if (currentPage === 'movies') { %>
+                <a href="/music" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:text-gray-400">Music</a>
+            <% } else if (currentPage === 'music') { %>
+                <a href="/movies" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:text-gray-400">Movies</a>
+            <% } else { %>
+                <a href="/movies" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:text-gray-400">Movies</a>
+                <a href="/music" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:text-gray-400">Music</a>
+            <% } %>
+            <a href="/logout" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:text-gray-400">Log Out</a>
         </div>
     </div>
 </nav>
