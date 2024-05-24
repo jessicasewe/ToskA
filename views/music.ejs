@@ -43,16 +43,9 @@
     </style>
 </head>
 <body class="bg-gray-100">
+    
     <!-- Navbar -->
-    <nav class="bg-gray-800 py-4 sticky">
-        <div class="container mx-auto px-4 flex items-center justify-between">
-            <span class="text-white font-semibold text-xl">Toska</span>
-            <div class="flex items-center">
-                <a href="/movies" class="text-gray-300 hover:text-white px-3 py-2">Movies</a>
-                <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Logout</a>
-            </div>
-        </div>
-    </nav>
+    <%- include('partials/navbar.ejs') %>
 
     <!-- Static Image with Text -->
     <div class="relative isolate overflow-hidden bg-gray-900 h-screen">
@@ -73,6 +66,9 @@
             <!-- Genres will be inserted here dynamically -->
         </div>
     </div>
+
+    <!-- footer -->
+    <%- include('partials/footer.ejs') %>
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {

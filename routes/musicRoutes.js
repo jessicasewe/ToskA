@@ -34,7 +34,7 @@ router.get('/tracks/:playlistId', async (req, res) => {
         const tracks = await _getTracksByPlaylist(playlistId);
         res.json(tracks);
     } catch (error) {
-        console.log(error)
+        console.log(error);
         res.status(500).json({ error: error.message });
     }
 });

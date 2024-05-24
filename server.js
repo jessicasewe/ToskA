@@ -106,6 +106,12 @@ app.get('/playlists', (req, res) => {
   res.render('playlists', { genreId });
 });
 
+//render tracks page
+app.get('/tracks', (req, res) => {
+  const playlistId = req.query.playlistId;
+  res.render('tracks', { playlistId });
+});
+
 //serve static files
 app.use(express.static('public'));
 
