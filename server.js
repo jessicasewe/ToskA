@@ -100,6 +100,13 @@ app.get('/music', (req, res) => {
   res.render('music', { user: req.session.user });
 });
 
+app.get('/movies', (req, res) => {
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+  res.render('movies', { user: req.session.user });
+});
+
 //render playlist page
 app.get('/playlists', (req, res) => {
   const genreId = req.query.genreId;
