@@ -119,6 +119,12 @@ app.get('/tracks', (req, res) => {
   res.render('tracks', { playlistId, currentPage: 'music' });
 });
 
+// render movieslist page
+app.get('/movieslist', (req, res) => {
+  const genreId = req.query.genreId;
+  res.render('movieslist', { genreId, currentPage: 'movies', tmdbApiKey: process.env.TMDB_API_KEY });
+});
+
 //serve static files
 app.use(express.static('public'));
 

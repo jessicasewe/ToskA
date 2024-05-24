@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies List</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .hide-scroll-bar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .hide-scroll-bar::-webkit-scrollbar {
+            display: none;
+        }
+        .movie-card {
+            position: relative;
+            overflow: hidden;
+        }
+        .movie-card img {
+            transition: filter 0.3s ease;
+        }
+        .movie-card:hover img {
+            filter: brightness(70%);
+        }
+        .movie-card .movie-title {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 5px;
+            border-radius: 5px;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    
+    <!-- Navbar -->
+    <%- include('partials/navbar.ejs') %>
+
+    <!-- Movies Section -->
+    <div class="flex flex-col bg-white m-auto p-auto">
+        <h1 class="py-5 lg:px-20 md:px-10 px-5 lg:mx-0 md:mx-0 mx-5 font-bold text-4xl text-gray-800">
+            Movies
+        </h1>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 px-5 lg:px-20 md:px-10 mx-auto" id="moviesList">
+            <!-- Movies will be inserted here dynamically -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <%- include('partials/footer.ejs') %>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const genreId = urlParams.get('genreId');
+                if (!genreId) {
+                    throw new Error('Genre ID is missing in the URL');
+                }
+
+                const response = await fetch(`/api/movies/genres/${genreId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch movies');
+                }
+                const movies = await response.json();
+
+                const moviesListContainer = document.getElementById('moviesList');
+                const tmdbApiKey = '<%= tmdbApiKey %>' // Replace with your TMDb API key
+
+                for (const movie of movies) {
+                    try {
+                        const tmdbResponse = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${tmdbApiKey}&query=${encodeURIComponent(movie.title)}`);
+                        if (!tmdbResponse.ok) {
+                            console.warn('Image not found for:', movie.title);
+                            continue;
+                        }
+                        const tmdbData = await tmdbResponse.json();
+                        const posterPath = tmdbData.results[0]?.poster_path;
+                        const imageUrl = posterPath ? `https://image.tmdb.org/t/p/w500${posterPath}` : 'default-image-url.jpg'; // Fallback image
+
+                        const movieDiv = document.createElement('div');
+                        movieDiv.innerHTML = `
+                            <div class="movie-card">
+                                <img src="${imageUrl}" alt="${movie.title}">
+                                <div class="movie-title">${movie.title}</div>
+                            </div>
+                        `;
+                        moviesListContainer.appendChild(movieDiv);
+                    } catch (imageError) {
+                        console.error('Error fetching image for movie:', movie.title, imageError);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching movies:', error);
+                alert('An error occurred while fetching movies. Please try again later.');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -7,11 +7,11 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         .hide-scroll-bar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
+          -ms-overflow-style: none; /* IE and Edge */
+          scrollbar-width: none; /* Firefox */
         }
         .hide-scroll-bar::-webkit-scrollbar {
-          display: none;
+          display: none; /* Safari and Chrome */
         }
         .genre-card {
             position: relative;
@@ -47,7 +47,7 @@
 
     <!-- Static Image with Text -->
     <div class="relative isolate overflow-hidden bg-gray-900 h-screen">
-        <img src="https://images.pexels.com/photos/2507025/pexels-photo-2507025.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" class="absolute inset-0 h-full w-full object-cover">
+        <img src="https://images.pexels.com/photos/2507025/pexels-photo-2507025.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Background Image" class="absolute inset-0 h-full w-full object-cover">
         <div class="absolute inset-0 bg-black opacity-50"></div>
         <div class="relative z-10 flex items-center justify-center h-full">
             <div class="text-center text-white px-4">
@@ -62,7 +62,7 @@
         <h1 class="py-5 lg:px-20 md:px-10 px-5 lg:mx-0 md:mx-0 mx-5 font-bold text-4xl text-gray-800">
             Movies Genre
         </h1>
-        <div class="flex overflow-x-scroll pb-10 hide-scroll-bar lg:mx-0 md:mx-0 mx-5">
+        <div class="flex overflow-x-auto pb-10 hide-scroll-bar lg:mx-0 md:mx-0 mx-5">
             <div class="flex flex-nowrap" id="movieGenres">
                 <!-- Movie genres will be inserted here dynamically -->
             </div>
@@ -74,7 +74,7 @@
         <h1 class="py-5 lg:px-20 md:px-10 px-5 lg:mx-0 md:mx-0 mx-5 font-bold text-4xl text-gray-800">
             TV Shows Genre
         </h1>
-        <div class="flex overflow-x-scroll pb-10 hide-scroll-bar lg:mx-0 md:mx-0 mx-5">
+        <div class="flex overflow-x-auto pb-10 hide-scroll-bar lg:mx-0 md:mx-0 mx-5">
             <div class="flex flex-nowrap" id="tvShowGenres">
                 <!-- TV show genres will be inserted here dynamically -->
             </div>
@@ -100,7 +100,7 @@
                     const genreDiv = document.createElement('div');
                     genreDiv.className = 'inline-block px-3';
                     genreDiv.innerHTML = `
-                        <a href="/movies?genreId=${genre.id}">
+                        <a href="/movieslist?genreId=${genre.id}"> <!-- Corrected the href here -->
                             <div class="w-64 h-64 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out genre-card">
                                 <img src="https://source.unsplash.com/featured/?${genre.name}" alt="${genre.name}" class="w-full h-full object-cover">
                                 <div class="genre-name">${genre.name}</div>
@@ -111,7 +111,7 @@
                 });
 
                 // Fetch TV show genres
-                const tvShowGenresResponse = await fetch('http://localhost:5000/api/tv/genres');
+                const tvShowGenresResponse = await fetch('/api/tv/genres');
                 if (!tvShowGenresResponse.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -134,8 +134,9 @@
                 });
             } catch (error) {
                 console.error('Error fetching genres:', error);
+                alert('An error occurred while fetching genres. Please try again later.');
             }
         });
-    </script>    
+    </script>
 </body>
 </html>
