@@ -32,6 +32,43 @@
             border-radius: 5px;
             color: white;
         }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 600px;
+            display: flex;
+        }
+        .modal-content img {
+            width: 40%;
+            height: auto;
+            object-fit: cover;
+        }
+        .modal-details {
+            width: 60%;
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .close-button {
+            align-self: flex-end;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -49,18 +86,31 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal" id="movieModal">
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="">
+            <div class="modal-details">
+                <span class="close-button" onclick="closeModal()">&times;</span>
+                <h2 id="modalTitle" class="text-xl font-bold mb-2"></h2>
+                <p id="modalDescription" class="mt-2 mb-4 text-gray-800"></p>
+                <div id="modalDetails">
+                    <p class="flex items-center mb-2"><span class="mr-2">🌟</span><span id="modalRating"></span></p>
+                    <p class="flex items-center mb-2"><span class="mr-2">📅</span><span id="modalReleaseDate"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <%- include('partials/footer.ejs') %>
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                const urlParams = new URLSearchParams(window.location.search);
-                const genreId = urlParams.get('genreId');
-                if (!genreId) {
-                    throw new Error('Genre ID is missing in the URL');
-                }
+            const tmdbApiKey = '<%= tmdbApiKey %>';
+            const genreId = '<%= genreId %>';
 
+            try {
                 const response = await fetch(`/api/movies/genres/${genreId}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch movies');
@@ -68,7 +118,6 @@
                 const movies = await response.json();
 
                 const moviesListContainer = document.getElementById('moviesList');
-                const tmdbApiKey = '<%= tmdbApiKey %>' // Replace with your TMDb API key
 
                 for (const movie of movies) {
                     try {
@@ -78,17 +127,20 @@
                             continue;
                         }
                         const tmdbData = await tmdbResponse.json();
-                        const posterPath = tmdbData.results[0]?.poster_path;
+                        const movieData = tmdbData.results[0];
+                        const posterPath = movieData?.poster_path;
                         const imageUrl = posterPath ? `https://image.tmdb.org/t/p/w500${posterPath}` : 'default-image-url.jpg'; // Fallback image
 
                         const movieDiv = document.createElement('div');
                         movieDiv.innerHTML = `
-                            <div class="movie-card">
+                            <div class="movie-card" data-movie-id="${movieData.id}">
                                 <img src="${imageUrl}" alt="${movie.title}">
                                 <div class="movie-title">${movie.title}</div>
                             </div>
                         `;
                         moviesListContainer.appendChild(movieDiv);
+
+                        movieDiv.addEventListener('click', () => openModal(movieData.id, tmdbApiKey));
                     } catch (imageError) {
                         console.error('Error fetching image for movie:', movie.title, imageError);
                     }
@@ -98,6 +150,29 @@
                 alert('An error occurred while fetching movies. Please try again later.');
             }
         });
+
+        async function openModal(movieId, apiKey) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/movies/${movieId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch movie details');
+                }
+                const movie = await response.json();
+                document.getElementById('modalTitle').textContent = movie.title;
+                document.getElementById('modalImage').src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+                document.getElementById('modalDescription').textContent = movie.overview;
+                document.getElementById('modalRating').textContent = `Rating: ${movie.vote_average}`;
+                document.getElementById('modalReleaseDate').textContent = `Release Date: ${movie.release_date}`;
+                document.getElementById('movieModal').style.display = 'flex';
+            } catch (error) {
+                console.error('Error fetching movie details:', error);
+                alert('An error occurred while fetching movie details. Please try again later.');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('movieModal').style.display = 'none';
+        }
     </script>
 </body>
 </html>
