@@ -125,6 +125,13 @@ app.get('/movieslist', (req, res) => {
   res.render('movieslist', { genreId, currentPage: 'movies', tmdbApiKey: process.env.TMDB_API_KEY });
 });
 
+
+//render tvshows page
+app.get('/tvshows', (req, res) => {
+  const genreID = req.query.genreId;
+  res.render('tvshows', { genreID, currentPage: 'movies', tmdbApiKey: process.env.TMDB_API_KEY });
+}); 
+
 //serve static files
 app.use(express.static('public'));
 
