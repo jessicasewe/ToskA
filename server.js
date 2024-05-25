@@ -84,6 +84,12 @@ app.post('/login', async (req, res) => {
   }
 });
 
+//handle logout
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.redirect('/login');
+});
+
 
 // Render the choose category page
 app.get('/category', (req, res) => {
