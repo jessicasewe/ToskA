@@ -47,3 +47,15 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+
+// Logout User
+exports.logoutUser = async (req, res) => {
+  try {
+    req.session.destroy();
+    res.redirect('/login');
+  } catch (error) {
+    console.error('Error logging out user:', error);
+    res.status(500).send('Error logging out user. Please try again later.');
+  }
+};
