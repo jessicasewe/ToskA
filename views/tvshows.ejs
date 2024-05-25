@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TV Shows List</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .hide-scroll-bar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .hide-scroll-bar::-webkit-scrollbar {
+            display: none;
+        }
+        .tvshow-card {
+            position: relative;
+            overflow: hidden;
+        }
+        .tvshow-card img {
+            transition: filter 0.3s ease;
+        }
+        .tvshow-card:hover img {
+            filter: brightness(70%);
+        }
+        .tvshow-card .tvshow-title {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 5px;
+            border-radius: 5px;
+            color: white;
+        }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 500px;
+            display: flex;
+        }
+        .modal-content img {
+            width: 40%;
+            height: auto;
+            object-fit: cover;
+        }
+        .modal-details {
+            width: 60%;
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .close-button {
+            align-self: flex-end;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    
+    <!-- Navbar -->
+    <%- include('partials/navbar.ejs') %>
+
+    <!-- TV Shows Section -->
+    <div class="flex flex-col bg-white m-auto p-auto">
+        <h1 class="py-5 lg:px-20 md:px-10 px-5 lg:mx-0 md:mx-0 mx-5 font-bold text-4xl text-gray-800">
+            TV Shows
+        </h1>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 px-5 lg:px-20 md:px-10 mx-auto" id="tvShowsList">
+            <!-- TV Shows will be inserted here dynamically -->
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="tvShowModal">
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="">
+            <div class="modal-details">
+                <span class="close-button" onclick="closeModal()">&times;</span>
+                <h2 id="modalTitle" class="text-xl font-bold mb-2"></h2>
+                <p id="modalDescription" class="mt-2 mb-4 text-gray-800"></p>
+                <div id="modalDetails">
+                    <p class="flex items-center mb-2"><span class="mr-2">🌟</span><span id="modalRating"></span></p>
+                    <p class="flex items-center mb-2"><span class="mr-2">📅</span><span id="modalReleaseDate"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <%- include('partials/footer.ejs') %>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const tmdbApiKey = '<%= tmdbApiKey %>';
+            const genreID = '<%= genreID %>';
+
+            try {
+                const response = await fetch(`/api/tv/genres/${genreID}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch TV shows');
+                }
+                const tvShows = await response.json();
+                console.log('Fetched TV Shows:', tvShows);
+
+                const tvShowsListContainer = document.getElementById('tvShowsList');
+
+                for (const show of tvShows) {
+                    if (!show.name) {
+                        console.warn('No name found for TV show:', show);
+                        continue;
+                    }
+                    try {
+                        const tmdbResponse = await fetch(`https://api.themoviedb.org/3/search/tv?api_key=${tmdbApiKey}&query=${encodeURIComponent(show.name)}`);
+                        if (!tmdbResponse.ok) {
+                            console.warn('Image not found for:', show.name);
+                            continue;
+                        }
+                        const tmdbData = await tmdbResponse.json();
+                        if (!tmdbData.results || tmdbData.results.length === 0) {
+                            console.warn('No results found for:', show.name);
+                            continue;
+                        }
+                        const showData = tmdbData.results[0];
+                        const posterPath = showData.poster_path;
+                        const imageUrl = posterPath ? `https://image.tmdb.org/t/p/w500${posterPath}` : 'default-image-url.jpg'; // Fallback image
+
+                        const showDiv = document.createElement('div');
+                        showDiv.innerHTML = `
+                            <div class="tvshow-card" data-show-id="${showData.id}">
+                                <img src="${imageUrl}" alt="${show.name}">
+                                <div class="tvshow-title">${show.name}</div>
+                            </div>
+                        `;
+                        tvShowsListContainer.appendChild(showDiv);
+
+                        showDiv.addEventListener('click', () => openModal(showData.id, tmdbApiKey));
+                    } catch (imageError) {
+                        console.error('Error fetching image for TV show:', show.name, imageError);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching TV shows:', error);
+                alert('An error occurred while fetching TV shows. Please try again later.');
+            }
+        });
+
+        async function openModal(showId, apiKey) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/tv/${showId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch TV show details');
+                }
+                const show = await response.json();
+                document.getElementById('modalTitle').textContent = show.name;
+                document.getElementById('modalImage').src = `https://image.tmdb.org/t/p/w500${show.poster_path}`;
+                document.getElementById('modalDescription').textContent = show.overview;
+                document.getElementById('modalRating').textContent = `Rating: ${show.vote_average}`;
+                document.getElementById('modalReleaseDate').textContent = `First Air Date: ${show.first_air_date}`;
+                document.getElementById('tvShowModal').style.display = 'flex';
+            } catch (error) {
+                console.error('Error fetching TV show details:', error);
+                alert('An error occurred while fetching TV show details. Please try again later.');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('tvShowModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
