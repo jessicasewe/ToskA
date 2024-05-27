@@ -100,9 +100,9 @@
                     const genreDiv = document.createElement('div');
                     genreDiv.className = 'inline-block px-3';
                     genreDiv.innerHTML = `
-                        <a href="/movieslist?genreId=${genre.id}"> <!-- Corrected the href here -->
-                            <div class="w-64 h-64 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out genre-card">
-                                <img src="https://source.unsplash.com/featured/?${genre.name}" alt="${genre.name}" class="w-full h-full object-cover">
+                        <a href="/movieslist?genreId=${genre.id}">
+                            <div class="w-64 h-64 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out genre-card relative">
+                                <img src="${genre.imagePath}" alt="${genre.name}" class="w-full h-full object-cover">
                                 <div class="genre-name">${genre.name}</div>
                             </div>
                         </a>
@@ -125,7 +125,7 @@
                     genreDiv.innerHTML = `
                         <a href="/tvshows?genreId=${genre.id}">
                             <div class="w-64 h-64 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out genre-card">
-                                <img src="https://source.unsplash.com/featured/?${genre.name}" alt="${genre.name}" class="w-full h-full object-cover">
+                                <img src="${genre.imagePath}" alt="${genre.name}" class="w-full h-full object-cover">
                                 <div class="genre-name">${genre.name}</div>
                             </div>
                         </a>

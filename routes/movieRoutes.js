@@ -2,12 +2,27 @@ const express = require('express');
 const router = express.Router();
 const { _getMoviesGenres, _getMoviesByGenre, _getTVGenres, _getTVShowsByGenre, _getMovieById, _getTVShowById } = require('../controllers/movieController');
 
-//route for movie genres
+const tmdbApiKey = process.env.TMDB_API_KEY;
+// async function _getMoviesGenres() {
+//     const response = await fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${tmdbApiKey}&language=en-US`);
+//     const data = await response.json();
+//     return data.genres;
+// }
+
+// Route for movie genres with images
 router.get('/movies/genres', async (req, res) => {
     try {
         const genres = await _getMoviesGenres();
-        res.json(genres);
+        const genresWithImages = await Promise.all(genres.map(async (genre) => {
+            const moviesResponse = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${tmdbApiKey}&with_genres=${genre.id}&language=en-US&sort_by=popularity.desc`);
+            const moviesData = await moviesResponse.json();
+            const imagePath = moviesData.results[0]?.poster_path || '/default-image.jpg'; // Fallback image
+            return { ...genre, imagePath: `https://image.tmdb.org/t/p/w500${imagePath}` };
+        }));
+
+        res.json(genresWithImages);
     } catch (error) {
+        console.error('Error fetching genres:', error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -41,8 +56,16 @@ router.get('/movies/:movieId', async (req, res) => {
 router.get('/tv/genres', async (req, res) => {
     try {
         const genres = await _getTVGenres();
-        res.json(genres);
+        const genresWithImages = await Promise.all(genres.map(async (genre) => {
+            const tvShowsResponse = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${tmdbApiKey}&with_genres=${genre.id}&language=en-US&sort_by=popularity.desc`);
+            const tvShowsData = await tvShowsResponse.json();
+            const imagePath = tvShowsData.results[0]?.poster_path || '/default-image.jpg'; // Fallback image
+            return { ...genre, imagePath: `https://image.tmdb.org/t/p/w500${imagePath}` };
+        }));
+
+        res.json(genresWithImages);
     } catch (error) {
+        console.error('Error fetching genres:', error);
         res.status(500).json({ error: error.message });
     }
 });
