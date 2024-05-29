@@ -20,8 +20,6 @@
 
 <img src="track preview.png" alt="project-screenshot" width="800" height="400/">
 
-<img src="ic.png Add files via upload 1 minute ago package-lock.json categories page 5 days ago package.json categories page 5 days ago playlist.png" alt="project-screenshot" width="400" height="400/">
-
   
   
 <h2>🧐 Features</h2>
