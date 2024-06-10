@@ -83,4 +83,4 @@ Technologies used in the project:
 <h4>Jessica Sewe Guriyire</h4> 
 https://github.com/jessicasewe
 
-https://www.linkedin.com/in/jessica-sewe-977b2618a/
+https://www.linkedin.com/in/jessica-guriyire-977b2618a/
